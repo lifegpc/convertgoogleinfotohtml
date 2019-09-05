@@ -1,4 +1,4 @@
-if [! -d "bin"]; then
+if [ ! -d "bin" ]; then
 mkdir bin
 fi
 g++ -O3 -o bin/main.o -c src/main.cpp
