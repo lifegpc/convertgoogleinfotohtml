@@ -6,4 +6,8 @@ bool usejsonc=true;
 bool disjsonc=false;
 //是否强制使用json-c
 bool enjsonc=false;
+//输入文件名
+char* input;
+//输出文件名
+char* output;
 #endif
