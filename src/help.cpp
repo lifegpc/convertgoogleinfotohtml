@@ -10,5 +10,5 @@ void noinfohelp()
 
 void help()
 {
-    printf("convert [-el|-dl] input output\n-el:Use json-c.\n-dl:Not use json-c.\nNote:If not specified and the file size is larger than 32M , it will not use json-c.\ninput: The input file.\noutput:The output file.\n");
+    printf("convert [-el|-dl] input output\n-el:Use json-c.\n-dl:Not use json-c.\nNote:If not specified and the file size is larger than 32M , it will not use json-c.\ninput: The input file.\noutput:The output directory.\n");
 }

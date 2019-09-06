@@ -1,3 +1,5 @@
+#include<stdio.h>
+#include"build.hpp"
 #ifndef __CONVERT__MAIN__
 #define __CONVERT__MAIN__
 //是否使用json-c
@@ -10,4 +12,18 @@ bool enjsonc=false;
 char* input;
 //输出文件名
 char* output;
+//输入文件
+FILE *in;
+//输出文件
+FILE *out;
+#if sysbit==64
+//文件大小
+long long filesize;
+#endif
+#if sysbit==32
+//文件大小
+long filesize;
+#endif
+//临界大小
+long fz=32*1024*1024;
 #endif
