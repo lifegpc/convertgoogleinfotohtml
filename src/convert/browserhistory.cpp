@@ -95,7 +95,12 @@ int browserhistory_prase(array_list *list,config* c)
             printf("%s",c->output);
             strcat(a,c->output);
             if(c->output[strlen(c->output)-1]!='/'&&c->output[strlen(c->output)-1]!='\\')strcat(a,"/");
+            #ifdef Windows
             _itoa(fi,b,10);
+            #endif
+            #ifdef Liunx
+            sprintf(b,"%d",fi);
+            #endif
             strcat(a,b);
             strcat(a,".html");
             #if sysbit==64
