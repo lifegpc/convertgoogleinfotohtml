@@ -2,8 +2,10 @@
 #include"build.hpp"
 #include<json-c/json.h>
 #include"json.hpp"
+#include"string.h"
 
 json_object *json_obj;
+lh_table *json_table;
 
 #if sysbit==64
 int prasefile(FILE* in,long long filesize)
@@ -27,16 +29,43 @@ int prasefile(FILE* in,long filesize)
     #endif
     if(!re)
     {
-        printf("Failed to read input file.");
+        printf("Failed to read input file.\n");
         return -2;
     }
     buf[filesize]='\0';
     json_obj=json_tokener_parse(buf);
     if(json_obj==NULL)
     {
-        printf("The input file is not a JSON file.");
+        printf("Can not parse the input file.\n");
         return -3;
     }
     free(buf);
+    json_type type=json_object_get_type(json_obj);
+    if(type==json_type_object)
+    {
+        json_table=json_object_get_object(json_obj);
+        if(json_table->count==1)
+        {
+            lh_entry *tem;
+            tem=json_table->head;
+            #ifdef DEBUG
+            printf("%s\n",(char *)tem->k);
+            #endif
+            if(strcmp((const char *)tem->k,"Browser History")==0)
+            {
+                json_object *obj=NULL;
+                obj=json_object_object_get(json_obj,(const char *)tem->k);
+                type=json_object_get_type(obj);
+                if(type==json_type_array)
+                {
+                    array_list *list;
+                    list=json_object_get_array(obj);
+                    #ifdef DEBUG
+                    printf("%i",list->length);
+                    #endif
+                }
+            }
+        }
+    }
     return 0;
 }

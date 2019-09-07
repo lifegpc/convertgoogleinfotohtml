@@ -7,7 +7,7 @@
 #include"json.hpp"
 //convert [-el|-dl] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
-//-4 内存不足 -5 无法读取输入文件 -6 输入文件不是JSON文件
+//-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败
 int main(int argc,char *argv[])
 {
     if(argc==1)
