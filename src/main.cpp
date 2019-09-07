@@ -5,12 +5,20 @@
 #include"main.hpp"
 #include"string.hpp"
 #include"json.hpp"
-//convert [-el|-dl] [-s count] input output
+//convert [-el|-dl] [-s count] [-cy|-cn] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
 //-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败 -7 未知的JSON文件
 //-8 创建输出文件夹失败 -9 删除已有输出文件夹失败
 int main(int argc,char *argv[])
 {
+    config *c=new config();
+    c->usejsonc=true;
+    c->disjsonc=false;
+    c->enjsonc=false;
+    c->fz=32*1024*1024;
+    c->count=1000;
+    c->overwritey=false;
+    c->overwriten=false;
     if(argc==1)
     {
         noinfohelp();
@@ -31,8 +39,8 @@ int main(int argc,char *argv[])
                 return -1;
             }
         }
-        input=argv[1];
-        output=argv[2];
+        c->input=argv[1];
+        c->output=argv[2];
     }
     else
     {
@@ -51,18 +59,23 @@ int main(int argc,char *argv[])
                         index=tem;
                         if(tem==1)
                         {
-                            if(strcmp(argv[i],"-el")==0)enjsonc=true;
-                            else disjsonc=true;
+                            if(strcmp(argv[i],"-el")==0)c->enjsonc=true;
+                            else c->disjsonc=true;
                         }
                         if(tem==2)
                         {
                             i++;
-                            count=atoi(argv[i]);
-                            if(count<=0)
+                            c->count=atoi(argv[i]);
+                            if(c->count<=0)
                             {
                                 printf("Invalid parameter.\n");
                                 return -1;
                             }
+                        }
+                        if(tem==3)
+                        {
+                            if(strcmp(argv[i],"-cy")==0)c->overwritey=true;
+                            else c->overwriten=true;
                         }
                     }
                     else
@@ -79,8 +92,8 @@ int main(int argc,char *argv[])
             }
             else
             {
-                if(bindex==0)input=argv[i];
-                else if(bindex==1)output=argv[i];
+                if(bindex==0)c->input=argv[i];
+                else if(bindex==1)c->output=argv[i];
                 else
                 {
                     printf("Invalid parameter.\n");
@@ -96,28 +109,28 @@ int main(int argc,char *argv[])
         }
     }
     #if sysbit==64
-    in=fopen64(input,"r");
+    c->in=fopen64(c->input,"r");
     #endif
     #if sysbit==32
-    in=fopen(input,"r");
+    c->in=fopen(c->input,"r");
     #endif
-    if(in==NULL)
+    if(c->in==NULL)
     {
         printf("Can not open input file.\n");
         return -2;
     }
     #if sysbit==64
-    if(fseeko64(in,0,SEEK_END)==0)
+    if(fseeko64(c->in,0,SEEK_END)==0)
     {
-        filesize=ftello64(in);
-        fseeko64(in,0,SEEK_SET);
+        c->filesize=ftello64(c->in);
+        fseeko64(c->in,0,SEEK_SET);
     }
     #endif
     #if sysbit==32
-    if(fseeko(in,0,SEEK_END)==0)
+    if(fseeko(c->in,0,SEEK_END)==0)
     {
-        filesize=ftello(in);
-        fseeko(in,0,SEEK_SET);
+        c->filesize=ftello(c->in);
+        fseeko(c->in,0,SEEK_SET);
     }
     #endif
     else
@@ -125,22 +138,22 @@ int main(int argc,char *argv[])
         printf("Can not get the size of input file.\n");
         return -3;
     }
-    if(filesize>fz)usejsonc=false;else usejsonc=true;
-    if(enjsonc)usejsonc=true;
-    if(disjsonc)usejsonc=false;
+    if(c->filesize>c->fz)c->usejsonc=false;else c->usejsonc=true;
+    if(c->enjsonc)c->usejsonc=true;
+    if(c->disjsonc)c->usejsonc=false;
     #ifdef DEBUG
-    printf("usejsonc:%s\ndisjsonc:%s\nenjsonc:%s\ninput:%s\noutput:%s\n",usejsonc?"true":"false",disjsonc?"true":"false",enjsonc?"true":"false",input,output);
+    printf("usejsonc:%s\ndisjsonc:%s\nenjsonc:%s\ninput:%s\noutput:%s\n",c->enjsonc?"true":"false",c->disjsonc?"true":"false",c->enjsonc?"true":"false",c->input,c->output);
     #if sysbit==64
-    printf("filesize:%lli\n",filesize);
+    printf("filesize:%lli\n",c->filesize);
     #endif
     #if sysbit==32
-    printf("filesize:%li\n",filesize);
+    printf("filesize:%li\n",c->filesize);
     #endif
-    printf("count:%i\n",count);
+    printf("count:%i\noverwritey:%s\noverwriten:%s\n",c->count,c->overwritey?"true":"false",c->overwriten?"true":"false");
     #endif
-    if(usejsonc)
+    if(c->usejsonc)
     {
-        int re=prasefile(in,output,filesize,count);
+        int re=prasefile(c);
         if(re==-1)return -4;
         if(re==-2)return -5;
         if(re==-3)return -6;

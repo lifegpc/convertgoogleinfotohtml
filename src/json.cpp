@@ -4,36 +4,37 @@
 #include"json.hpp"
 #include"string.h"
 #include"convert/browserhistory.hpp"
+#include"main.hpp"
 
 json_object *json_obj;
 lh_table *json_table;
 
 #if sysbit==64
-int prasefile(FILE* in,char* out,long long filesize,int count)
+int prasefile(config* c)
 #endif
 #if sysbit==32
-int prasefile(FILE* in,char* out,long filesize,int count)
+int prasefile(config* c)
 #endif
 {
     char* buf;
-    buf=(char *)malloc(filesize+1);
+    buf=(char *)malloc(c->filesize+1);
     if(buf==NULL)
     {
         printf("No enough memory.\n");
         return -1;
     }
     #if sysbit==64
-    long long re=fread(buf,1,filesize,in);
+    long long re=fread(buf,1,c->filesize,c->in);
     #endif
     #if sysbit==32
-    long re=fread(buf,sizeof(char),filesize,in);
+    long re=fread(buf,1,c->filesize,c->in);
     #endif
     if(!re)
     {
         printf("Failed to read input file.\n");
         return -2;
     }
-    buf[filesize]='\0';
+    buf[c->filesize]='\0';
     json_obj=json_tokener_parse(buf);
     if(json_obj==NULL)
     {
@@ -41,7 +42,7 @@ int prasefile(FILE* in,char* out,long filesize,int count)
         return -3;
     }
     free(buf);
-    fclose(in);
+    fclose(c->in);
     json_type type=json_object_get_type(json_obj);
     if(type==json_type_object)
     {
@@ -65,7 +66,7 @@ int prasefile(FILE* in,char* out,long filesize,int count)
                     #ifdef DEBUG
                     printf("%i\n",list->length);
                     #endif
-                    int rr=browserhistory_prase(list,out,count);
+                    int rr=browserhistory_prase(list,c);
                     if(rr==-1)
                     {
                         printf("Unknown JSON file.\n");

@@ -10,6 +10,7 @@
 #include<sys/types.h>
 #include<dirent.h>
 #endif
+#include"../main.hpp"
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
@@ -26,60 +27,59 @@ struct browserhistory
     int status;
 };
 
-int browserhistory_prase(array_list *list,char* output,int count)
+int browserhistory_prase(array_list *list,config* c)
 {
     json_object *obj;
     #ifdef Windows
-    if(access(output,0))
+    if(access(c->output,0))
     {
-        int rre=mkdir(output);
+        int rre=mkdir(c->output);
         if(rre)return -2;
     }
     #endif
     #ifdef Linux
-    if(opendir(output)==NULL)
+    if(opendir(c->output)==NULL)
     {
-        int rre=mkdir(output,S_IRWXU);
+        int rre=mkdir(c->output,S_IRWXU);
         if(rre)return -2;
     }
     #endif
     else
     {
-        printf("The output directory is already exist , do you want to overwrite it?(y/n)\nNote:It will delete this directory at first.\n");
-        char inn=getc(stdin);
-        if(inn=='y'||inn=='Y')
+        bool overwrite=false;
+        if(!c->overwriten&&!c->overwritey)
         {
-            #ifdef Windows
-            int le=strlen(output)+100;
+            printf("The output directory is already exist , do you want to overwrite it?(y/n)\nNote:It will delete this directory at first.\n");
+            char inn=getc(stdin);
+            if(inn=='y'||inn=='Y')overwrite=true;
+        }
+        if(!c->overwriten&&(c->overwritey||overwrite))
+        {
+            int le=strlen(c->output)+100;
             char *a=new char[le];
             a[0]='\0';
+            #ifdef Windows
             strcat(a,"rmdir /s /q \"");
-            strcat(a,output);
-            strcat(a,"\"");
-            system(a);
             #endif
             #ifdef Linux
-            int le=strlen(output)+100;
-            char *a=new char[le];
-            a[0]='\0';
             strcat(a,"rm -r \"");
-            strcat(a,output);
+            #endif
+            strcat(a,c->output);
             strcat(a,"\"");
             system(a);
-            #endif
         }
         else return -2;
         #ifdef Windows
-        if(access(output,0))
+        if(access(c->output,0))
         {
-            int rre=mkdir(output);
+            int rre=mkdir(c->output);
             if(rre)return -2;
         }
         #endif
         #ifdef Linux
-        if(opendir(output)==NULL)
+        if(opendir(c->output)==NULL)
         {
-            int rre=mkdir(output,S_IRWXU);
+            int rre=mkdir(c->output,S_IRWXU);
             if(rre)return -2;
         }
         #endif
