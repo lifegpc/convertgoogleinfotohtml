@@ -41,6 +41,7 @@ int prasefile(FILE* in,char* out,long filesize,int count)
         return -3;
     }
     free(buf);
+    fclose(in);
     json_type type=json_object_get_type(json_obj);
     if(type==json_type_object)
     {
@@ -70,10 +71,15 @@ int prasefile(FILE* in,char* out,long filesize,int count)
                         printf("Unknown JSON file.\n");
                         return -4;
                     }
-                    if(rr==2)
+                    if(rr==-2)
                     {
                         printf("Can not create the output directory.\n");
                         return -5;
+                    }
+                    if(rr==-3)
+                    {
+                        printf("Can not delete the exist output directory.\n");
+                        return -6;
                     }
                 }
                 else

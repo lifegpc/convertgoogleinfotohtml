@@ -10,6 +10,7 @@
 #include<sys/types.h>
 #include<dirent.h>
 #endif
+#include"../file.hpp"
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
@@ -43,6 +44,42 @@ int browserhistory_prase(array_list *list,char* output,int count)
         if(rre)return -2;
     }
     #endif
+    else
+    {
+        printf("The output directory is already exist , do you want to overwrite it?(y/n)\nNote:It will delete this directory at first.\n");
+        char inn=getc(stdin);
+        if(inn=='y'||inn=='Y')
+        {
+            #ifdef Windows
+            int le=strlen(output)+100;
+            char *a=new char[le];
+            a[0]='\0';
+            strcat(a,"rmdir /s /q \"");
+            strcat(a,output);
+            strcat(a,"\"");
+            system(a);
+            #endif
+            #ifdef Linux
+            int rre=remove_dir(output);
+            if(rre)return -3;
+            #endif
+        }
+        else return -2;
+        #ifdef Windows
+        if(access(output,0))
+        {
+            int rre=mkdir(output);
+            if(rre)return -2;
+        }
+        #endif
+        #ifdef Linux
+        if(opendir(output)==NULL)
+        {
+            int rre=mkdir(output,S_IRWXU);
+            if(rre)return -2;
+        }
+        #endif
+    }
     for(int i=1;i<=1;i++)
     {
         obj=(json_object*)array_list_get_idx(list,i);
