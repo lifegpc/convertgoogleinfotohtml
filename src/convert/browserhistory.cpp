@@ -84,8 +84,28 @@ int browserhistory_prase(array_list *list,config* c)
         }
         #endif
     }
-    for(int i=1;i<=1;i++)
+    for(int i=0;i<=list->length;i++)
     {
+        if(i%c->count==0)
+        {
+            int fi=i/c->count+1;
+            if(fi>1)fclose(c->out);
+            char *a=new char[strlen(c->output)+100],*b=new char[100];
+            a[0]='\0';
+            printf("%s",c->output);
+            strcat(a,c->output);
+            if(c->output[strlen(c->output)-1]!='/'&&c->output[strlen(c->output)-1]!='\\')strcat(a,"/");
+            _itoa(fi,b,10);
+            strcat(a,b);
+            strcat(a,".html");
+            #if sysbit==64
+            c->out=fopen64(a,"w");
+            #endif
+            #if sysbit==32
+            c->out=fopen(a,"w");
+            #endif
+            if(c->out==NULL)return -3;
+        }
         obj=(json_object*)array_list_get_idx(list,i);
         browserhistory* re=getbrowserhistory(obj);
         if(re->status==-1)return -1;
@@ -94,6 +114,7 @@ int browserhistory_prase(array_list *list,config* c)
             //
         }
     }
+    fclose(c->out);
     return 0;
 }
 //-1 未知的JSON文件
@@ -102,7 +123,7 @@ browserhistory* getbrowserhistory(json_object* obj)
     browserhistory* re=new browserhistory();
     json_object* tem;
     lh_table *ta=json_object_get_object(obj);
-    if(ta->count!=6)
+    if(ta->count!=6&&ta->count!=5)
     {
         re->status=-1;
         return re;
@@ -156,7 +177,7 @@ browserhistory* getbrowserhistory(json_object* obj)
         if(i<ta->count)te=te->next;
         i++;
     } while (i<=ta->count);
-    if(x==6)re->status=0;else re->status=-1;
+    if(x==6||x==5)re->status=0;else re->status=-1;
     return re;
 }
 //判断是否为BrowserHistory元素

@@ -16,6 +16,8 @@ struct config
     char* output;
     //输入文件
     FILE *in;
+    //输出文件
+    FILE *out;
     #if sysbit==64
     //文件大小
     long long filesize;

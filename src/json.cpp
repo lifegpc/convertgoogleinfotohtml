@@ -77,6 +77,11 @@ int prasefile(config* c)
                         printf("Can not create the output directory.\n");
                         return -5;
                     }
+                    if(rr==-3)
+                    {
+                        printf("Can not create the output file.");
+                        return -6;
+                    }
                 }
                 else
                 {
