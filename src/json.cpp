@@ -9,10 +9,10 @@ json_object *json_obj;
 lh_table *json_table;
 
 #if sysbit==64
-int prasefile(FILE* in,char* out,long long filesize)
+int prasefile(FILE* in,char* out,long long filesize,int count)
 #endif
 #if sysbit==32
-int prasefile(FILE* in,char* out,long filesize)
+int prasefile(FILE* in,char* out,long filesize,int count)
 #endif
 {
     char* buf;
@@ -64,7 +64,17 @@ int prasefile(FILE* in,char* out,long filesize)
                     #ifdef DEBUG
                     printf("%i\n",list->length);
                     #endif
-                    browserhistory_prase(list,out);
+                    int rr=browserhistory_prase(list,out,count);
+                    if(rr==-1)
+                    {
+                        printf("Unknown JSON file.\n");
+                        return -4;
+                    }
+                    if(rr==2)
+                    {
+                        printf("Can not create the output directory.\n");
+                        return -5;
+                    }
                 }
                 else
                 {

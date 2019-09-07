@@ -8,6 +8,7 @@
 //convert [-el|-dl] [-s count] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
 //-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败 -7 未知的JSON文件
+//-8 创建输出文件夹失败
 int main(int argc,char *argv[])
 {
     if(argc==1)
@@ -55,6 +56,13 @@ int main(int argc,char *argv[])
                         }
                         if(tem==2)
                         {
+                            i++;
+                            count=atoi(argv[i]);
+                            if(count<=0)
+                            {
+                                printf("Invalid parameter.\n");
+                                return -1;
+                            }
                         }
                     }
                     else
@@ -128,14 +136,16 @@ int main(int argc,char *argv[])
     #if sysbit==32
     printf("filesize:%li\n",filesize);
     #endif
+    printf("count:%i\n",count);
     #endif
     if(usejsonc)
     {
-        int re=prasefile(in,output,filesize);
+        int re=prasefile(in,output,filesize,count);
         if(re==-1)return -4;
         if(re==-2)return -5;
         if(re==-3)return -6;
         if(re==-4)return -7;
+        if(re==-5)return -8;
     }
     return 0;
 }
