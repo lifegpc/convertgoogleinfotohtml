@@ -4,11 +4,22 @@
 #include<string.h>
 #include"main.hpp"
 #include"string.hpp"
+#include"json.hpp"
 //convert [-el|-dl] input output
+//1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
+//-4 内存不足 -5 无法读取输入文件 -6 输入文件不是JSON文件
 int main(int argc,char *argv[])
 {
-    if(argc==1)noinfohelp();
-    if(argc==2&&(strcmp(argv[1],"--help")==0||strcmp(argv[1],"/?")==0))help();
+    if(argc==1)
+    {
+        noinfohelp();
+        return 1;
+    }
+    if(argc==2&&(strcmp(argv[1],"--help")==0||strcmp(argv[1],"/?")==0))
+    {
+        help();
+        return 1;
+    }
     if(argc==3)
     {
         for(int i=1;i<3;i++)
@@ -85,10 +96,18 @@ int main(int argc,char *argv[])
         return -2;
     }
     #if sysbit==64
-    if(fseeko64(in,0,SEEK_END)==0)filesize=ftello64(in);
+    if(fseeko64(in,0,SEEK_END)==0)
+    {
+        filesize=ftello64(in);
+        fseeko64(in,0,SEEK_SET);
+    }
     #endif
     #if sysbit==32
-    if(fseeko(in,0,SEEK_END)==0)filesize=ftello(in);
+    if(fseeko(in,0,SEEK_END)==0)
+    {
+        filesize=ftello(in);
+        fseeko(in,0,SEEK_SET);
+    }
     #endif
     else
     {
@@ -107,5 +126,12 @@ int main(int argc,char *argv[])
     printf("filesize:%li\n",filesize);
     #endif
     #endif
+    if(usejsonc)
+    {
+        int re=prasefile(in,filesize);
+        if(re==-1)return -4;
+        if(re==-2)return -5;
+        if(re==-3)return -6;
+    }
     return 0;
 }
