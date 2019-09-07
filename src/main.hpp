@@ -14,8 +14,6 @@ char* input;
 char* output;
 //输入文件
 FILE *in;
-//输出文件
-FILE *out;
 #if sysbit==64
 //文件大小
 long long filesize;
@@ -26,4 +24,6 @@ long filesize;
 #endif
 //临界大小
 long fz=32*1024*1024;
+//单个文件最大存储数据条数
+int count=1000;
 #endif

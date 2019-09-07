@@ -4,7 +4,9 @@ bool ischoice(char* input)
 {
     if(input[0]=='-')
     {
-        if(strcmp(input,"-el")==0||strcmp(input,"-dl")==0)return true;else return false;
+        if(strcmp(input,"-el")==0||strcmp(input,"-dl")==0)return true;
+        else if(strcmp(input,"-s")==0)return true;
+        else return false;
     }
     else return false;
 }
@@ -21,5 +23,6 @@ bool ischoice(char* input,bool strict)
 int getchoice(char* input)
 {
     if(strcmp(input,"-el")==0||strcmp(input,"-dl")==0)return 1;
+    if(strcmp(input,"-s")==0)return 2;
     else return -1;
 }

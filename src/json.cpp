@@ -3,15 +3,16 @@
 #include<json-c/json.h>
 #include"json.hpp"
 #include"string.h"
+#include"convert/browserhistory.hpp"
 
 json_object *json_obj;
 lh_table *json_table;
 
 #if sysbit==64
-int prasefile(FILE* in,long long filesize)
+int prasefile(FILE* in,char* out,long long filesize)
 #endif
 #if sysbit==32
-int prasefile(FILE* in,long filesize)
+int prasefile(FILE* in,char* out,long filesize)
 #endif
 {
     char* buf;
@@ -61,11 +62,32 @@ int prasefile(FILE* in,long filesize)
                     array_list *list;
                     list=json_object_get_array(obj);
                     #ifdef DEBUG
-                    printf("%i",list->length);
+                    printf("%i\n",list->length);
                     #endif
+                    browserhistory_prase(list,out);
+                }
+                else
+                {
+                    printf("Unknown JSON file.\n");
+                    return -4;
                 }
             }
+            else
+            {
+                printf("Unknown JSON file.\n");
+                return -4;
+            }
         }
+        else
+        {
+            printf("Unknown JSON file.\n");
+            return -4;
+        }
+    }
+    else
+    {
+        printf("Unknown JSON file.\n");
+        return -4;
     }
     return 0;
 }

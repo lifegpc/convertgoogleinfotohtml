@@ -5,9 +5,9 @@
 #include"main.hpp"
 #include"string.hpp"
 #include"json.hpp"
-//convert [-el|-dl] input output
+//convert [-el|-dl] [-s count] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
-//-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败
+//-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败 -7 未知的JSON文件
 int main(int argc,char *argv[])
 {
     if(argc==1)
@@ -52,6 +52,9 @@ int main(int argc,char *argv[])
                         {
                             if(strcmp(argv[i],"-el")==0)enjsonc=true;
                             else disjsonc=true;
+                        }
+                        if(tem==2)
+                        {
                         }
                     }
                     else
@@ -128,10 +131,11 @@ int main(int argc,char *argv[])
     #endif
     if(usejsonc)
     {
-        int re=prasefile(in,filesize);
+        int re=prasefile(in,output,filesize);
         if(re==-1)return -4;
         if(re==-2)return -5;
         if(re==-3)return -6;
+        if(re==-4)return -7;
     }
     return 0;
 }
