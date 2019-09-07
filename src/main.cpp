@@ -146,7 +146,6 @@ int main(int argc,char *argv[])
         if(re==-3)return -6;
         if(re==-4)return -7;
         if(re==-5)return -8;
-        if(re==-6)return -9;
     }
     return 0;
 }

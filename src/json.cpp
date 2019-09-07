@@ -76,11 +76,6 @@ int prasefile(FILE* in,char* out,long filesize,int count)
                         printf("Can not create the output directory.\n");
                         return -5;
                     }
-                    if(rr==-3)
-                    {
-                        printf("Can not delete the exist output directory.\n");
-                        return -6;
-                    }
                 }
                 else
                 {
