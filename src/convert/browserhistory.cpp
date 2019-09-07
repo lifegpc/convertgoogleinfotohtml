@@ -10,7 +10,6 @@
 #include<sys/types.h>
 #include<dirent.h>
 #endif
-#include"../file.hpp"
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
@@ -60,8 +59,13 @@ int browserhistory_prase(array_list *list,char* output,int count)
             system(a);
             #endif
             #ifdef Linux
-            int rre=remove_dir(output);
-            if(rre)return -3;
+            int le=strlen(output)+100;
+            char *a=new char[le];
+            a[0]='\0';
+            strcat(a,"rm -r \"");
+            strcat(a,output);
+            strcat(a,"\"");
+            system(a);
             #endif
         }
         else return -2;
