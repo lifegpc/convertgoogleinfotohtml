@@ -11,7 +11,9 @@
 #include<dirent.h>
 #endif
 #include"../main.hpp"
+#ifdef Windows
 #include<sys/time.h>
+#endif
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
@@ -118,7 +120,7 @@ int browserhistory_prase(array_list *list,config* c)
             if(c->out==NULL)return -3;
             fprintf(c->out,"<!DOCTYPE html><!--Made by convertgoogleinfotohtml.\nAuthor:Lifegpc\nConvert from:Chrome/BrowserHistory.json\nSource:https://github.com/lifegpc/convertgoogleinfotohtml--><html><head><title>BrowserHistory-%i</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\"><style>tr,td{word-wrap:break-word;word-break:break-all;}</style></head><body><h1 style=\"text-align:center\">BrowserHistory Page %i</h1>",fi,fi);
             if(fi>1)fprintf(c->out,"<div style=\"text-align:center\"><a href=\"%i.html\">The previous Page</a></div>",fi-1);
-            fprintf(c->out,"<table width=\"%s\"><tr height=\"%s\"><td width=\"%s\">Icon</td><td width=\"%s\">Page transition</td><td width=\"%s\">Title</td><td width=\"%s\">Client id</td><td width=\"%s\">Time usec(Timezone:%li)</td></tr>",c->table->width,c->table->height,c->table->icon,c->table->page_transition,c->table->title,c->table->client_id,c->table->time_usec,timezone);
+            fprintf(c->out,"<table width=\"%s\"><tr height=\"%s\"><td width=\"%s\">Icon</td><td width=\"%s\">Page transition</td><td width=\"%s\">Title</td><td width=\"%s\">Client id</td><td width=\"%s\">Time usec(Local time)</td></tr>",c->table->width,c->table->height,c->table->icon,c->table->page_transition,c->table->title,c->table->client_id,c->table->time_usec);
         }
         obj=(json_object*)array_list_get_idx(list,i);
         browserhistory* re=getbrowserhistory(obj);
