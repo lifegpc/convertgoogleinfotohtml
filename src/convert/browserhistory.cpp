@@ -92,7 +92,6 @@ int browserhistory_prase(array_list *list,config* c)
             if(fi>1)fclose(c->out);
             char *a=new char[strlen(c->output)+100],*b=new char[100];
             a[0]='\0';
-            printf("%s",c->output);
             strcat(a,c->output);
             if(c->output[strlen(c->output)-1]!='/'&&c->output[strlen(c->output)-1]!='\\')strcat(a,"/");
             #ifdef Windows
@@ -118,6 +117,7 @@ int browserhistory_prase(array_list *list,config* c)
         {
             //
         }
+        delete re;
     }
     fclose(c->out);
     return 0;

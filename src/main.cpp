@@ -5,7 +5,7 @@
 #include"main.hpp"
 #include"string.hpp"
 #include"json.hpp"
-//convert [-el|-dl] [-s count] [-cy|-cn] input output
+//convert [-el|-dl] [-s count] [-cy|-cn] [-w table_width iconwidth page_transitionwidth titlewidth client_idwidth time_usecwidth] [-h height] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
 //-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败 -7 未知的JSON文件
 //-8 创建输出文件夹失败 -9 创建输出文件失败
@@ -19,6 +19,14 @@ int main(int argc,char *argv[])
     c->count=1000;
     c->overwritey=false;
     c->overwriten=false;
+    c->table=new tableconfig();
+    c->table->icon=(char *)"10%";
+    c->table->page_transition=(char *)"10%";
+    c->table->title=(char *)"50%";
+    c->table->client_id=(char *)"15%";
+    c->table->time_usec=(char *)"15%";
+    c->table->height=(char *)"auto";
+    c->table->width=(char *)"100%";
     if(argc==1)
     {
         noinfohelp();
@@ -64,6 +72,11 @@ int main(int argc,char *argv[])
                         }
                         if(tem==2)
                         {
+                            if(i+1>=argc)
+                            {
+                                printf("Invalid parameter.\n");
+                                return -1;
+                            }
                             i++;
                             c->count=atoi(argv[i]);
                             if(c->count<=0)
@@ -76,6 +89,31 @@ int main(int argc,char *argv[])
                         {
                             if(strcmp(argv[i],"-cy")==0)c->overwritey=true;
                             else c->overwriten=true;
+                        }
+                        if(tem==4)
+                        {
+                            if(i+6>=argc)
+                            {
+                                printf("Invalid parameter.\n");
+                                return -1;
+                            }
+                            c->table->width=argv[i+1];
+                            c->table->icon=argv[i+2];
+                            c->table->page_transition=argv[i+3];
+                            c->table->title=argv[i+4];
+                            c->table->client_id=argv[i+5];
+                            c->table->time_usec=argv[i+6];
+                            i+=6;
+                        }
+                        if(tem==5)
+                        {
+                            if(i+1>=argc)
+                            {
+                                printf("Invalid parameter.\n");
+                                return -1;
+                            }
+                            c->table->height=argv[i+1];
+                            i++;
                         }
                     }
                     else
@@ -142,14 +180,14 @@ int main(int argc,char *argv[])
     if(c->enjsonc)c->usejsonc=true;
     if(c->disjsonc)c->usejsonc=false;
     #ifdef DEBUG
-    printf("usejsonc:%s\ndisjsonc:%s\nenjsonc:%s\ninput:%s\noutput:%s\n",c->enjsonc?"true":"false",c->disjsonc?"true":"false",c->enjsonc?"true":"false",c->input,c->output);
+    printf("usejsonc:%s\ndisjsonc:%s\nenjsonc:%s\ninput:%s\noutput:%s\n",c->usejsonc?"true":"false",c->disjsonc?"true":"false",c->enjsonc?"true":"false",c->input,c->output);
     #if sysbit==64
     printf("filesize:%lli\n",c->filesize);
     #endif
     #if sysbit==32
     printf("filesize:%li\n",c->filesize);
     #endif
-    printf("count:%i\noverwritey:%s\noverwriten:%s\n",c->count,c->overwritey?"true":"false",c->overwriten?"true":"false");
+    printf("count:%i\noverwritey:%s\noverwriten:%s\nwidth:%s\nicon:%s\npage_transition:%s\ntitle:%s\nclient_id:%s\ntime_usec:%s\nheight:%s\n",c->count,c->overwritey?"true":"false",c->overwriten?"true":"false",c->table->width,c->table->icon,c->table->page_transition,c->table->title,c->table->client_id,c->table->time_usec,c->table->height);
     #endif
     if(c->usejsonc)
     {

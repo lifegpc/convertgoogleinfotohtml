@@ -2,6 +2,18 @@
 #include"build.hpp"
 #ifndef __CONVERT__MAIN__
 #define __CONVERT__MAIN__
+struct tableconfig
+{
+    char* icon;
+    char* page_transition;
+    char* title;
+    char* client_id;
+    char* time_usec;
+    //一行高度
+    char* height;
+    //表格宽度
+    char* width;
+};
 struct config
 {
     //是否使用json-c
@@ -34,5 +46,7 @@ struct config
     bool overwritey;
     //输出文件夹存在时自动退出
     bool overwriten;
+    //输出表格格式
+    tableconfig *table;
 };
 #endif
