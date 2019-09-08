@@ -5,7 +5,7 @@
 #include"main.hpp"
 #include"string.hpp"
 #include"json.hpp"
-//convert [-el|-dl] [-s count] [-cy|-cn] [-w table_width iconwidth page_transitionwidth titlewidth client_idwidth time_usecwidth] [-h height] input output
+//convert [-el|-dl] [-s count] [-cy|-cn] [-w table_width iconwidth page_transitionwidth titlewidth client_idwidth time_usecwidth] [-h height] [-o] input output
 //1 获取帮助成功 -1 不正确的参数 -2 打不开输入文件 -3 无法获取输入文件的大小
 //-4 内存不足 -5 无法读取输入文件 -6 输入文件解析失败 -7 未知的JSON文件
 //-8 创建输出文件夹失败 -9 创建输出文件失败
@@ -27,6 +27,7 @@ int main(int argc,char *argv[])
     c->table->time_usec=(char *)"15%";
     c->table->height=(char *)"auto";
     c->table->width=(char *)"100%";
+    c->table->newtab=false;
     if(argc==1)
     {
         noinfohelp();
@@ -115,6 +116,7 @@ int main(int argc,char *argv[])
                             c->table->height=argv[i+1];
                             i++;
                         }
+                        if(tem==6)c->table->newtab=true;
                     }
                     else
                     {
@@ -188,6 +190,7 @@ int main(int argc,char *argv[])
     printf("filesize:%li\n",c->filesize);
     #endif
     printf("count:%i\noverwritey:%s\noverwriten:%s\nwidth:%s\nicon:%s\npage_transition:%s\ntitle:%s\nclient_id:%s\ntime_usec:%s\nheight:%s\n",c->count,c->overwritey?"true":"false",c->overwriten?"true":"false",c->table->width,c->table->icon,c->table->page_transition,c->table->title,c->table->client_id,c->table->time_usec,c->table->height);
+    printf("newtab:%s\n",c->table->newtab?"true":"false");
     #endif
     if(c->usejsonc)
     {

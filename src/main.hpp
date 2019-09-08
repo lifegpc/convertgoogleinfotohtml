@@ -13,6 +13,8 @@ struct tableconfig
     char* height;
     //表格宽度
     char* width;
+    //在新标签页打开
+    bool newtab;
 };
 struct config
 {
