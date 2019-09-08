@@ -14,6 +14,9 @@
 #ifdef Windows
 #include<sys/time.h>
 #endif
+#ifdef Linux
+#include<time.h>
+#endif
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
@@ -163,14 +166,12 @@ int browserhistory_prase(array_list *list,config* c)
             fprintf(c->out,"</td><td width=\"%s\">",c->table->time_usec);
             if(re->time)
             {
-                #ifdef Windows
                 time_t tt=re->time_usec/1000000ll;
                 tm *ti=localtime(&tt);
                 char* tti=new char[64];
                 strftime(tti,64,"%Y-%m-%d %H:%M:%S",ti);
                 fprintf(c->out,"%s",tti);
                 delete tti,tt,ti;
-                #endif
             }
             fprintf(c->out,"</td></tr>");
             fflush(c->out);
