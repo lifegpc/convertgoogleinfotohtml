@@ -109,7 +109,7 @@ int browserhistory_prase(array_list *list,config* c)
             #ifdef Windows
             _itoa(fi,b,10);
             #endif
-            #ifdef Liunx
+            #ifdef Linux
             sprintf(b,"%d",fi);
             #endif
             strcat(a,b);
