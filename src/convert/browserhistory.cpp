@@ -17,22 +17,10 @@
 #ifdef Linux
 #include<time.h>
 #endif
+#include"browserhistory.hpp"
 
 int isbrowserhistoryelement(lh_entry *in);
 struct browserhistory* getbrowserhistory(json_object* obj);
-
-struct browserhistory
-{
-    const char* favicon_url;
-    const char* page_transition;
-    const char* title;
-    const char* url;
-    const char* client_id;
-    long long time_usec;
-    //函数返回状态
-    int status;
-    bool time;
-};
 
 int browserhistory_prase(array_list *list,config* c)
 {

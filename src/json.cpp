@@ -6,6 +6,7 @@
 #include"convert/browserhistory.hpp"
 #include"main.hpp"
 #include"string.hpp"
+#include"list/intlist.hpp"
 
 json_object *json_obj;
 lh_table *json_table;
@@ -141,6 +142,29 @@ int myprasefile(config* c)
     bool first=true;
     //内容 1 Browser History
     int st=0;
+    //关键字数量头部
+    intlist *kch=new intlist();
+    //关键字数量
+    intlist *kc=kch;
+    //冒号数量头部
+    intlist *mch=new intlist();
+    //冒号数量
+    intlist *mc=mch;
+    //值数量头部
+    intlist *vch=new intlist();
+    //值数量
+    intlist *vc=vch;
+    //逗号数量头部
+    intlist *dch=new intlist();
+    //逗号数量
+    intlist *dc=dch;
+    //类型头部 0 列表 1 字典
+    intlist *tyh=new intlist();
+    intlist *ty=tyh;
+    //位置头部 0 键/值 1 冒号/逗号 2 值 3 逗号
+    intlist *tth=new intlist();
+    intlist *tt=tth;
+    browserhistory *da=new browserhistory();
 pa: while(re>0)
     {
         char t=buf[0];
@@ -217,6 +241,7 @@ pa: while(re>0)
                 {
                     first=false;
                     strcpy(sour,buf2);
+                    tt->addn();
                     if(strcmp(sour,"Browser History")==0)
                     {
                         st=1;
@@ -240,27 +265,93 @@ pa: while(re>0)
         else if(isuselesschar(t))buf++;
         else if(t=='{')
         {
+            if(ldk!=0||lzk!=0)
+            {
+                kc=cnintlist(kc);
+                mc=cnintlist(mc);
+                vc=cnintlist(vc);
+                dc=cnintlist(dc);
+                ty=cnintlist(ty);
+                ty->setn(1);
+                tt=cnintlist(tt);
+            }
+            else
+            {
+                ty->setn(1);
+            }
             ldk++;
             buf++;
             printf("ldk=%li\n",ldk);
         }
         else if(t=='}')
         {
+            if(ldk+lzk>1)
+            {
+                kc=kc->getp();
+                kc->dn();
+                mc=mc->getp();
+                mc->dn();
+                vc=vc->getp();
+                vc->dn();
+                dc=dc->getp();
+                dc->dn();
+                ty=ty->getp();
+                ty->dn();
+                tt=tt->getp();
+                tt->dn();
+            }
             ldk--;
             buf++;
             printf("ldk=%li\n",ldk);
         }
         else if(t=='[')
         {
+            if(ldk!=0||lzk!=0)
+            {
+                kc=cnintlist(kc);
+                mc=cnintlist(mc);
+                vc=cnintlist(vc);
+                dc=cnintlist(dc);
+                ty=cnintlist(ty);
+                tt=cnintlist(tt);
+            }
             lzk++;
             buf++;
             printf("lzk=%li\n",lzk);
         }
         else if(t==']')
         {
+            if(ldk+lzk>1)
+            {
+                kc=kc->getp();
+                kc->dn();
+                mc=mc->getp();
+                mc->dn();
+                vc=vc->getp();
+                vc->dn();
+                dc=dc->getp();
+                dc->dn();
+                ty=ty->getp();
+                ty->dn();
+                tt=tt->getp();
+                tt->dn();
+            }
             lzk--;
             buf++;
             printf("lzk=%li\n",lzk);
+        }
+        else if(t==',')
+        {
+            dc->addn();
+            if(ty->n()&&dc->n()==kc->n()&&dc->n()==vc->n()&&dc->n()==mc->n())
+            {}
+            else if(!ty->n()&&dc->n()==vc->n())
+            {}
+            else
+            {
+                printf("Can not parse the input file.\n");
+                return -3;
+            }
         }
         else buf++;
         re--;
