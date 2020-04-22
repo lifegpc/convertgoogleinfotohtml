@@ -33,7 +33,7 @@ int main(int argc,char *argv[])
         noinfohelp();
         return 1;
     }
-    if(argc==2&&(strcmp(argv[1],"--help")==0||strcmp(argv[1],"/?")==0))
+    if(argc==2&&(strcmp(argv[1],"--help")==0||strcmp(argv[1],"/?")==0||strcmp(argv[1],"-h")==0))
     {
         help();
         return 1;
@@ -201,6 +201,14 @@ int main(int argc,char *argv[])
         if(re==-4)return -7;
         if(re==-5)return -8;
         if(re==-6)return -9;
+    }
+    else
+    {
+        int re=myprasefile(c);
+        if(re==-1)return -4;
+        if(re==-2)return -5;
+        if(re==-3)return -6;
+        if(re==-4)return -7;
     }
     return 0;
 }

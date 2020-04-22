@@ -5,7 +5,7 @@ This file contains the method to provide support.*/
 
 void noinfohelp()
 {
-    printf("Command:\n\tconvert [-el|-dl] [-s count] [-cy|-cn] [-w table_width iconwidth page_transitionwidth titlewidth client_idwidth time_usecwidth] [-h height] [-o] input output\nDescription:\n\tConvert google user's data from json to html.\nPlease use \"convert --help\" or \"convert /?\" to get more information.\n");
+    printf("Command:\n\tconvert [-el|-dl] [-s count] [-cy|-cn] [-w table_width iconwidth page_transitionwidth titlewidth client_idwidth time_usecwidth] [-h height] [-o] input output\nDescription:\n\tConvert google user's data from json to html.\nPlease use \"convert --help\", \"convert /?\" or \"convert -h\" to get more information.\n");
 }
 
 void help()

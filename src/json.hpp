@@ -14,4 +14,7 @@ int prasefile(config* c);
 //-6 创建输出文件失败 
 int prasefile(config* c);
 #endif
+//自建解析
+//-1 内存不足 -2 无法读取输入文件 -3 输入文件解析失败 -4 未知的JSON文件
+int myprasefile(config* c);
 #endif

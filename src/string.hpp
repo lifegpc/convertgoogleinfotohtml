@@ -6,4 +6,6 @@ bool ischoice(char* input);
 bool ischoice(char* input,bool strict);
 //获取选项索引，不存在为-1
 int getchoice(char* input);
+//判断是否为空格制表符或者换行
+bool isuselesschar(char input);
 #endif

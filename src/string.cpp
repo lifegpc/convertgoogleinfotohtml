@@ -34,3 +34,8 @@ int getchoice(char* input)
     else if(strcmp(input,"-o")==0)return 6;
     else return -1;
 }
+
+bool isuselesschar(char input)
+{
+    if(input==10||input==13||input==9||input==32)return true; else return false;
+}
